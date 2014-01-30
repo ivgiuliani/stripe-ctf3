@@ -1,0 +1,6 @@
+*.pyc
+level0/test/data/
+level1/test/data/
+level2/test/data/
+level3/test/data/
+level4/test/data/
