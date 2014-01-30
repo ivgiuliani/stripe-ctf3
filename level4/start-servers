@@ -1,0 +1,31 @@
+#!/bin/bash
+
+set -eu
+declare -a pids
+pids=()
+
+run() {
+  echo "+ $*"
+  "$@" &
+  pids+=("$!")
+}
+
+cleanup() {
+  for pid in "${pids[@]}"; do
+    echo "$0: killing child $pid"
+    kill "$pid"
+  done
+}
+
+trap cleanup INT TERM QUIT
+
+rm -fr /tmp/sqlcluster
+run ./sqlcluster -d /tmp/sqlcluster/node0
+run ./sqlcluster -d /tmp/sqlcluster/node1 -l 127.0.0.1:4001 --join 127.0.0.1:4000
+run ./sqlcluster -d /tmp/sqlcluster/node2 -l 127.0.0.1:4002 --join 127.0.0.1:4000
+run ./sqlcluster -d /tmp/sqlcluster/node3 -l 127.0.0.1:4003 --join 127.0.0.1:4000
+run ./sqlcluster -d /tmp/sqlcluster/node4 -l 127.0.0.1:4004 --join 127.0.0.1:4000
+
+echo "$0: servers started"
+
+wait

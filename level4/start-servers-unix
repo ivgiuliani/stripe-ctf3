@@ -1,0 +1,33 @@
+#!/bin/bash
+
+set -eu
+declare -a pids
+pids=()
+
+run() {
+  echo "+ $*"
+  "$@" &
+  pids+=("$!")
+}
+
+cleanup() {
+  for pid in "${pids[@]}"; do
+    echo "$0: killing child $pid"
+    kill "$pid"
+  done
+}
+
+trap cleanup INT TERM QUIT
+
+rm -fr /tmp/sqlcluster
+rm -fr /tmp/octopus
+
+run ./sqlcluster -l /tmp/octopus/node0/node0.sock -d /tmp/octopus/node0
+run ./sqlcluster -l /tmp/octopus/node1/node1.sock -d /tmp/octopus/node1 --join=/tmp/octopus/node0/node0.sock
+run ./sqlcluster -l /tmp/octopus/node2/node2.sock -d /tmp/octopus/node2 --join=/tmp/octopus/node0/node0.sock
+run ./sqlcluster -l /tmp/octopus/node3/node3.sock -d /tmp/octopus/node3 --join=/tmp/octopus/node0/node0.sock
+run ./sqlcluster -l /tmp/octopus/node4/node4.sock -d /tmp/octopus/node4 --join=/tmp/octopus/node0/node0.sock
+
+echo "$0: servers started"
+
+wait
