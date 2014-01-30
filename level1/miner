@@ -1,0 +1,93 @@
+#!/bin/bash
+
+set -eu
+
+if [ "$#" != 2 ]; then
+    echo >&2 "Usage: $0 <clone_url> <public_username>
+
+A VERY SLOW mining implementation. This should give you an idea of
+where to start, but it probably won't successfully mine you any
+Gitcoins.
+
+Arguments:
+
+<clone_url> is the string you'd pass to git clone (i.e.
+  something of the form username@hostname:path)
+
+<public_username> is the public username provided to you in
+  the CTF web interface."
+    exit 1
+fi
+
+export clone_spec=$1
+export public_username=$2
+
+prepare_index() {
+    git pull
+
+    perl -i -pe 's/($ENV{public_username}: )(\d+)/$1 . ($2+1)/e' LEDGER.txt
+    grep -q "$public_username" LEDGER.txt || echo "$public_username: 1" >> LEDGER.txt
+
+    git add LEDGER.txt
+}
+
+solve() {
+    # Brute force until you find something that's lexicographically
+    # small than $difficulty.
+    rm -f msg
+    rm -f hash
+
+    difficulty=$(cat difficulty.txt)
+
+    # Create a Git tree object reflecting our current working
+    # directory
+    tree=$(git write-tree)
+    parent=$(git rev-parse HEAD)
+    timestamp=$(date +%s)
+    date=$(date +%H:%M)
+    echo "Mining: diff=$difficulty starting at $date"
+
+    #echo  "../miner.py $(pwd) $tree $parent $timestamp $difficulty"
+    #../miner.py $(pwd) $tree $parent $timestamp $difficulty
+    echo "java -Xms2G -Xmx2G -XX:+UseConcMarkSweepGC -jar ../jj.jar $tree $parent $timestamp $difficulty"
+    java -Xms2G -Xmx2G -XX:+UseConcMarkSweepGC -jar ../jj.jar $tree $parent $timestamp $difficulty
+
+    if [ -f hash ]; then
+        sha1=$(cat hash)
+
+        echo "Mined a Gitcoin with commit: $sha1"
+        cat msg | git hash-object -t commit --stdin -w
+        git reset --hard "$sha1" > /dev/null
+    fi
+}
+
+reset() {
+    git fetch origin master >/dev/null 2>/dev/null
+    git reset --hard origin/master >/dev/null
+}
+
+# Set up repo
+local_path=./${clone_spec##*:}
+
+rm -fr $local_path
+
+if [ -d "$local_path" ]; then
+    echo "Using existing repository at $local_path"
+    cd "$local_path"
+else
+    echo "Cloning repository to $local_path"
+    git clone "$clone_spec" "$local_path"
+    cd "$local_path"
+fi
+
+while true; do
+    prepare_index
+    solve
+    if git push origin master; then
+	echo "Success :)"
+	#break
+    else
+	echo "Starting over :("
+    fi
+	reset
+done
