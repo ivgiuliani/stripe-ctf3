@@ -93,7 +93,6 @@ func (s *Server) ListenAndServe(leader string) error {
 	if leader != "" {
 		// Join the leader if specified.
 		log.Println("Attempting to join the leader:", leader)
-		time.Sleep(500 * time.Millisecond)
 
 		if !s.raftServer.IsLogEmpty() {
 			log.Fatal("Cannot join with an existing log")
@@ -200,6 +199,8 @@ func (s *Server) sqlHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	// if we're not the leader forward the request to some other host
+
 	// TODO: there must be a better way to do all this
 
 	// get a list of available mates
@@ -268,7 +269,7 @@ func (s *Server) proxy(whoCs string, query []byte, retries int) ([]byte, bool) {
 				break
 			}
 
-			// just wait a bit before trying again
+			// wait a bit before trying again
 			time.Sleep(15 * time.Millisecond)
 		}
 	}

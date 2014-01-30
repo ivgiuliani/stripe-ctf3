@@ -7,7 +7,7 @@ import (
 )
 
 type QueryCommand struct {
-	Create		 bool	`json:c`
+	Create       bool   `json:c`
 	Name         string `json:n`
 	FavoriteWord string `json:w`
 	FriendCount  int    `json:f`
