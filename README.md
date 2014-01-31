@@ -32,7 +32,7 @@ or bloom filters.
 Level 1
 -----------------------------------------------------------------------------
 This one was interesting. I know git, but not that well, and this level asked
-to generate git commits whose sh1 was smaller than a given value. They
+to generate git commits whose sha1 was smaller than a given value. They
 provided you with a bash script that looped over `git hash-object` but
 of course that was very slow. I wrote my initial solution in Python and
 passed the level after a couple of minutes of mining doing ~100k hash/sec
@@ -109,20 +109,21 @@ protocol or improve the actual program's performance (or both).
 
 Conclusions
 -----------------------------------------------------------------------------
-I like the contest and can't really complain on anything. Just a few itches:
-- some folks complained that $a_given_level was not written in the
-  $their_favorite_language so they rewrote the whole thing in
-  $their_favorite_language. I don't think that should be the spirit of the
-  CTF. For this I written Ruby, Python, Javascript, Go, Scala, Java and even
-  attempted a C solution for level0, and I'm really only familiar with Python
-  and Java among these (and C, but haven't touched the language in decades).
+I liked the contest and can't really complain on anything. Just a few itches:
+- some folks complained that $a\_given\_level was not written in the
+  $their\_favorite\_language so they rewrote the whole thing in
+  $their\_favorite\_language. I don't think that should be the spirit of the
+  CTF. For this I've written Ruby, Python, Javascript, Go, Scala, Java and
+  even attempted a C solution for level0, and I'm really only familiar with
+  Python and Java among these (and C, but haven't touched the language in
+  decades).
   Now it might be by chance, but I noticed a pattern, where NodeJS folks
   always rewrote everything in NodeJS; I believe that's just plain wrong.
 - other folks spent more time trying to hack around the system than
   actually solving the problems. If they had put as much effort into trying
   to solve the actual problem as they did in circumventing it, they would
   be better programmers by now.
-  One guy (that I know of) also downloaded each reference test case and
+  One guy (that I know of) also downloaded each possible test case and
   essentially wrote a O(1) solution that just returned the expected output
   for level3. I'm not sure how to react to this, but it just seems unfair.
   I mean, you have an awesome score, but you didn't solve the level's
