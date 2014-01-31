@@ -25,7 +25,7 @@ final solution in Go.
 
 It turns out that folks have done awesome things with this level to save
 even a few microseconds like [injecting preprocessed hash tables in the
-binary after the compilation](muehe.org/posts/stripe-ctf-3-writeup/) or
+binary after the compilation](http://muehe.org/posts/stripe-ctf-3-writeup/)
 or bloom filters.
 
 
