@@ -11,6 +11,9 @@ import (
 func main() {
 	words := make(map[string]bool)
 
+	// load the dictionary in bg so we can do as much preprocessing as we
+	// can in the meantime
+
 	wait := make(chan bool)
 	go func(ch chan<- bool) {
 		// load the preprocessed dictionary that contains only lower
