@@ -13,7 +13,9 @@ func main() {
 
 	wait := make(chan bool)
 	go func(ch chan <- bool) {
-		fData, err := ioutil.ReadFile("preprocessed.txt")
+    // load the preprocessed dictionary that contains only lower
+    // case words
+		fData, err := ioutil.ReadFile("dictionary.txt")
 		if err != nil {
 			log.Fatalln(err)
 			return
