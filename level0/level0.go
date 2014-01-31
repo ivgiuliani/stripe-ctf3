@@ -1,10 +1,10 @@
 package main
 
 import (
-	"os"
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 	"strings"
 )
 
@@ -12,9 +12,9 @@ func main() {
 	words := make(map[string]bool)
 
 	wait := make(chan bool)
-	go func(ch chan <- bool) {
-    // load the preprocessed dictionary that contains only lower
-    // case words
+	go func(ch chan<- bool) {
+		// load the preprocessed dictionary that contains only lower
+		// case words
 		fData, err := ioutil.ReadFile("dictionary.txt")
 		if err != nil {
 			log.Fatalln(err)
@@ -40,7 +40,7 @@ func main() {
 		lines[l] = strings.Split(line, " ")
 	}
 	output := make([]string, len(lines))
-	<- wait
+	<-wait
 
 	for l, line := range lines {
 		for i, word := range line {
