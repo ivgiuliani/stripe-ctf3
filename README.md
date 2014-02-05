@@ -96,7 +96,7 @@ contrast with what everybody else was seeing (people had the opposite
 problem, where remote solution was slow and local much faster) and I'm still
 not sure what was causing it. Initially I thought it was because of sqlite3
 (which was used as a backend) that maybe was holding me back and/or related
-disk accessed, but then I ditched sqlite altogether and still experienced the
+disk accesses, but then I ditched sqlite altogether and still experienced the
 problem. At this point I can only assume it's some issue with unix sockets
 that octopus was using to simulate the lossy network.
 
